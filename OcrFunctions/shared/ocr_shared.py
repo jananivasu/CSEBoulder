@@ -2,30 +2,33 @@
 Shared code for OCR functions and storage manipulation.
 """
 
-class AzureOcrService:
+import requests
+import os
+
+class AzureOcrService(object):
     """
     Class for OCR service.
     """
-    # process function - takes in blob, returns output text (decide format)
-    pass
+    def get_ocr_results(self, ocr_service_url, subscription_key, image_url):
+        headers = {'Ocp-Apim-Subscription-Key': subscription_key}
+        params  = {'language': 'unk', 'detectOrientation': 'true'}
+        data = {'url': image_url}
+        response = requests.post(ocr_service_url, headers=headers, params=params, json=data)
+        results = response.json()
+        return results
 
-class BlobStorageService:
-    """
-    Class for storage services and manipulation.
-    """
-    # save function - takes in text and location to save to, saves as .txt file
-    # (for now, look at adding other formats later)
-    # returns status code indicating whether save succeeded or failed
-    pass
+    def process_ocr_text(self, ocr_json):
+        line_infos = [region["lines"] for region in ocr_json["regions"]]
+        word_infos = []
+        for line in line_infos:
+            for word_metadata in line:
+                for word_info in word_metadata["words"]:
+                    word_infos.append(word_info)
+        word_infos
 
-def processImage(blob, OcrService, StorageService, doc):
-    """
-    Function that makes use of AzureOcrService and BlobStorageService classes to
-    process an image, extract the text, and store it as an output file.
-    """
-    pass
-    # input validation
-    # text = OcrService.process(blob)
-    # validate text, return bad status code if empty
-    # status = storageService.save(text, doc)
-    # return status
+        output_text = ""    
+        for word in word_infos:
+            text = word["text"]
+            output_text = output_text + " " + text
+
+        return output_text

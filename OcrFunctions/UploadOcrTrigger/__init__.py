@@ -2,15 +2,15 @@
 Module for OCR upload trigger scenario.
 """
 
+import os
 import logging
 import json
 import azure.functions as func
+from ..shared.ocr_shared import AzureOcrService
 
-# TODO: The follwing imports are producing errors
-# from .shared import ocr_shared
-# from ocr_shared import AzureOcrService, BlobStorageService, processImage
-
-DEFAULT_RETURN_HEADER = {"content-type": "application/json"}
+ocr_service_url = "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/ocr"
+blob_base_url = "https://boulderupskillstorage.blob.core.windows.net/"
+subscription_key = os.getenv('OCR_SUBSCRIPTION_KEY')
 
 def main(myblob: func.InputStream, doc: func.Out[func.Document]):
     """
@@ -20,22 +20,14 @@ def main(myblob: func.InputStream, doc: func.Out[func.Document]):
                  f"Name: {myblob.name}\n"
                  f"Blob Size: {myblob.length} bytes")
 
-    # Input validation, although what to do with bad input?
-    # Blob trigger functions seemingly don't support HTTP responses.
+    blob_path = blob_base_url + myblob.name
 
-    # ocr_service = AzureOcrService()
-    # storage_service = BlobStorageService()
-    # status = processImage(myblob, ocr_service, storage_service, doc)
+    # TODO: Input validation, although what to do with bad input?
+    # Blob trigger functions don't support HTTP responses.
 
-    # Test writing some output to the cosmos DB
-    outdata = {"test": myblob.name}
+    OcrService = AzureOcrService()
+    results = OcrService.get_ocr_results(ocr_service_url, subscription_key, blob_path)
+    output_text = OcrService.process_ocr_text(results)
+
+    outdata = {"ocr_text": output_text}
     doc.set(func.Document.from_json(json.dumps(outdata)))
-
-    '''
-    # Note: Blob trigger functions seemingly don't support HTTP responses.
-    # return func.HttpResponse(
-    #     status_code=200,
-    #     headers=DEFAULT_RETURN_HEADER,
-    #     body=json.dumps({"success": "success"})
-    # )
-    '''

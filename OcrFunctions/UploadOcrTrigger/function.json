@@ -12,7 +12,7 @@
       "direction": "out",
       "type": "cosmosDB",
       "name": "doc",
-      "databaseName": "test",
+      "databaseName": "ocr-output",
       "collectionName": "items",
       "leaseCollectionName": "leases",
       "createLeaseCollectionIfNotExists": true,
