@@ -76,7 +76,7 @@ class CredentialChecker(BaseTokenChecker):
             character_classes += 1
 
         # searching for symbols
-        if re.search(r"[ !#$%&'()*+,-./[\\\]^_`{|}~"+r'"]', token) is not None:
+        if re.search(r"[ !#$%&'()*+,./[\\\]^_`{|}~"+r'"]', token) is not None:
             character_classes += 1
 
         if character_classes > 2:
