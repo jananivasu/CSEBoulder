@@ -3,7 +3,6 @@ Shared code for OCR functions and storage manipulation.
 """
 
 import requests
-import os
 
 class AzureOcrService(object):
     """
@@ -11,7 +10,7 @@ class AzureOcrService(object):
     """
     def get_ocr_results(self, ocr_service_url, subscription_key, image_url):
         headers = {'Ocp-Apim-Subscription-Key': subscription_key}
-        params  = {'language': 'unk', 'detectOrientation': 'true'}
+        params = {'language': 'unk', 'detectOrientation': 'true'}
         data = {'url': image_url}
         response = requests.post(ocr_service_url, headers=headers, params=params, json=data)
         results = response.json()
@@ -24,9 +23,8 @@ class AzureOcrService(object):
             for word_metadata in line:
                 for word_info in word_metadata["words"]:
                     word_infos.append(word_info)
-        word_infos
 
-        output_text = ""    
+        output_text = ""
         for word in word_infos:
             text = word["text"]
             output_text = output_text + " " + text
