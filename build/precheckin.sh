@@ -1,3 +1,5 @@
+set -e
+
 chmod +x ./build/install.sh
 chmod +x ./build/validate.sh
 

@@ -1,3 +1,5 @@
+set -e
+
 current_file_path=$(readlink -f '$0')
 parentDir=$(dirname "$current_file_path")
 
