@@ -2,11 +2,22 @@
   "scriptFile": "__init__.py",
   "bindings": [
     {
-      "name": "myblob",
+      "name": "triggeredblob",
       "type": "blobTrigger",
       "direction": "in",
-      "path": "samples-workitems/{name}",
-      "connection": ""
-    }
+      "path": "staging-book-pages/{name}",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "direction": "out",
+      "type": "cosmosDB",
+      "name": "doc",
+      "databaseName": "ocr-output",
+      "collectionName": "items",
+      "leaseCollectionName": "leases",
+      "createLeaseCollectionIfNotExists": true,
+      "connectionStringSetting": "AzureWebJobsCosmosDBConnectionString",
+      "createIfNotExists": true
+    } 
   ]
 }

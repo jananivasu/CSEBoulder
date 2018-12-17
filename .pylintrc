@@ -140,7 +140,8 @@ disable=print-statement,
         exception-escape,
         comprehension-escape,
         invalid-name,
-        logging-fstring-interpolation
+        logging-fstring-interpolation,
+        relative-beyond-top-level
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -221,8 +222,7 @@ spelling-store-unknown-words=no
 
 # List of note tags to take in consideration, separated by a comma.
 notes=FIXME,
-      XXX,
-      TODO
+      XXX
 
 
 [TYPECHECK]
