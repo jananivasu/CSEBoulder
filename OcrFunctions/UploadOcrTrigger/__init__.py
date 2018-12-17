@@ -24,10 +24,17 @@ def main(triggered_blob: func.InputStream, doc: func.Out[func.Document]):
 
     # TODO: Input validation, although what to do with bad input?
     # Blob trigger functions don't support HTTP responses.
-
-    OcrService = AzureOcrService()
-    results = OcrService.get_ocr_results(ocr_service_url, subscription_key, blob_path)
-    output_text = OcrService.process_ocr_text(results)
+    ocr_service = AzureOcrService()
+    output_text = run_ocr(ocr_service, ocr_service_url, blob_path, subscription_key)
 
     outdata = {"ocr_text": output_text}
     doc.set(func.Document.from_json(json.dumps(outdata)))
+
+def run_ocr(ocr_service: AzureOcrService, service_url: str, key: str, blob_path: str) -> str:
+    """
+    Executes OCR
+    """
+    results = ocr_service.get_ocr_results(service_url, key, blob_path)
+    output_text = ocr_service.process_ocr_text(results)
+
+    return output_text
