@@ -12,7 +12,7 @@ ocr_service_url = "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0
 blob_base_url = "https://boulderupskillstorage.blob.core.windows.net/"
 subscription_key = os.getenv('OCR_SUBSCRIPTION_KEY')
 
-def main(myblob: func.InputStream, doc: func.Out[func.Document]):
+def main(triggered_blob: func.InputStream, doc: func.Out[func.Document]):
     """
     Main entry point for image OCR processing when new image is uploaded.
     """
@@ -20,7 +20,7 @@ def main(myblob: func.InputStream, doc: func.Out[func.Document]):
                  f"Name: {myblob.name}\n"
                  f"Blob Size: {myblob.length} bytes")
 
-    blob_path = blob_base_url + myblob.name
+    blob_path = blob_base_url + triggered_blob.name
 
     # TODO: Input validation, although what to do with bad input?
     # Blob trigger functions don't support HTTP responses.
