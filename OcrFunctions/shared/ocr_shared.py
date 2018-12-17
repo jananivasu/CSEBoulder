@@ -4,7 +4,7 @@ Shared code for OCR functions and storage manipulation.
 
 import requests
 
-class AzureOcrService(object):
+class AzureOcrService():
     """
     Class for OCR service.
     """

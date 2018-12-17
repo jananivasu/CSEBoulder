@@ -17,8 +17,8 @@ def main(triggered_blob: func.InputStream, doc: func.Out[func.Document]):
     Main entry point for image OCR processing when new image is uploaded.
     """
     logging.info(f"Python blob trigger function processed blob \n"
-                 f"Name: {myblob.name}\n"
-                 f"Blob Size: {myblob.length} bytes")
+                 f"Name: {triggered_blob.name}\n"
+                 f"Blob Size: {triggered_blob.length} bytes")
 
     blob_path = blob_base_url + triggered_blob.name
 
