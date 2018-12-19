@@ -8,16 +8,19 @@ class AzureOcrService():
     """
     Class for OCR service.
     """
-    @staticmethod
-    def get_ocr_results(ocr_service_url, subscription_key, image_url):
+    def __init__(self, ocr_service_url, subscription_key):
+        self.ocr_service_url = ocr_service_url
+        self.subscription_key = subscription_key
+
+    def get_ocr_results(self, image_url):
         """
         Retrieve results of processing by OCR service.
         """
 
-        headers = {'Ocp-Apim-Subscription-Key': subscription_key}
+        headers = {'Ocp-Apim-Subscription-Key': self.subscription_key}
         params = {'language': 'unk', 'detectOrientation': 'true'}
         data = {'url': image_url}
-        response = requests.post(ocr_service_url, headers=headers, params=params, json=data)
+        response = requests.post(self.ocr_service_url, headers=headers, params=params, json=data)
         results = response.json()
         return results
 
