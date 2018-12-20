@@ -5,7 +5,7 @@ import azure.functions as func
 from azure.storage.blob import BlockBlobService
 from applicationinsights import TelemetryClient
 from mockito import unstub, when, ANY, mock, verify
-from main import run_functriggercode
+from .main import run_functriggercode
 
 # To run this, run 'pytest'
 # Pytest searches for files beginning with 'test_' and calls their main function.
@@ -60,8 +60,8 @@ class BlobUploadTest(unittest.TestCase):
             'utf-8'), expected_http_response, "")
 
         # Verify that upload to blob store was called once from inside the func
-        verify(mock_blobservice, times=1).create_blob_from_stream(any, any, any)
-        verify(mock_telemetry_client, times=6).track_trace(any)
+        verify(mock_blobservice, times=1).create_blob_from_stream(ANY, ANY, ANY)
+        verify(mock_telemetry_client, times=6).track_trace(ANY)
 
         unstub()
 

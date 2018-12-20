@@ -55,6 +55,7 @@ class UploadImagePrompt(Cmd):
         """
         Displays the version
         """
+        print(args)
         print(version)
 
 def upload_image(filepath, http_url):

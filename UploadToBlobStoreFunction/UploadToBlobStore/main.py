@@ -6,7 +6,7 @@ import azure.functions as func
 from azure.storage.blob import BlockBlobService, PublicAccess
 from blob_storage_helper import upload_to_blobstore
 from oauth import AutoUpdatedTokenCredential
-from settings import APPINSIGHTS_INSTRUMENTATION_KEY,\
+from .settings import APPINSIGHTS_INSTRUMENTATION_KEY,\
  AZURE_STORAGE_ACCOUNT_NAME, BLOB_CONTAINER_NAME
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
