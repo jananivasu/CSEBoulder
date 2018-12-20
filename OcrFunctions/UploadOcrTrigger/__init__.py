@@ -16,11 +16,12 @@ def main(triggeredblob: func.InputStream, doc: func.Out[func.Document]):
     """
     Main entry point for image OCR processing when new image is uploaded.
     """
-    logging.info(f"Python blob trigger function processed blob \n"
-                 f"Name: {triggeredblob.name}\n"
-                 f"Blob Size: {triggeredblob.length} bytes")
+    logging.info("Python blob trigger function processed blob.")
+    logging.info(f"Name: {triggeredblob.name}")
+    logging.info(f"Blob Size: {triggeredblob.length} bytes")
 
     blob_path = blob_base_url + triggeredblob.name
+    image_name = triggeredblob.name.split('/')[-1]
 
     # TODO: Input validation, although what to do with bad input?
     # Blob trigger functions don't support HTTP responses.
@@ -28,7 +29,10 @@ def main(triggeredblob: func.InputStream, doc: func.Out[func.Document]):
     OcrService = AzureOcrService(ocr_service_url, subscription_key)
     output_text = process_image(OcrService, blob_path)
 
-    outdata = {"ocr_text": output_text}
+    outdata = {"image_url": blob_path,
+               "image_name": image_name,
+               "ocr_text": output_text
+               }
     doc.set(func.Document.from_json(json.dumps(outdata)))
 
 def process_image(OcrService, blob_path):
