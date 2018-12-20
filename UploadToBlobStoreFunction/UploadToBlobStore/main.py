@@ -70,7 +70,7 @@ def run_functriggercode(block_blob_service: BlockBlobService, container_name: st
             "Successfully uploaded to blob store",
             status_code=200
         )
-    
+
     telemetry_client.track_trace("Error occurred while uploading to blob store")
     telemetry_client.flush()
     return func.HttpResponse(
