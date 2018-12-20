@@ -9,8 +9,9 @@ Module with functions to help perform AAD auth
 
 import datetime
 import threading
-import adal
 import json
+import adal
+
 
 from azure.storage.common import TokenCredential
 
@@ -24,7 +25,7 @@ class AutoUpdatedTokenCredential(TokenCredential):
         super(AutoUpdatedTokenCredential, self).__init__()
 
         # a timer is used to trigger a callback to update the token
-        # the timer needs to be protected, 
+        # the timer needs to be protected,
         # as later on it is possible that one thread is setting a new timer and
         # another thread is trying to cancel the timer
         self.lock = threading.Lock()
@@ -58,7 +59,7 @@ class AutoUpdatedTokenCredential(TokenCredential):
 
     def stop_refreshing_token(self):
         """
-        The timer needs to be canceled if the application is terminating, 
+        The timer needs to be canceled if the application is terminating,
         if not the timer will keep going.
         """
         with self.lock:
@@ -94,11 +95,11 @@ class AutoUpdatedTokenCredential(TokenCredential):
             aad_client_id,
             aad_client_secret)
 
-        # return the token itself and the interval to wait 
+        # return the token itself and the interval to wait
         # before this function should be called again
-        # generally oauth_token['expiresIn'] - 180 is a good interval to give, 
-        # as it tells the caller to refresh the token 3 minutes before it expires, 
+        # generally oauth_token['expiresIn'] - 180 is a good interval to give,
+        # as it tells the caller to refresh the token 3 minutes before it expires,
         # so here we are assuming that the token expiration
-        # is at least longer than 3 minutes, the user should adjust it 
+        # is at least longer than 3 minutes, the user should adjust it
         # according to their AAD policy
         return oauth_token['accessToken'], oauth_token['expiresIn'] - 180

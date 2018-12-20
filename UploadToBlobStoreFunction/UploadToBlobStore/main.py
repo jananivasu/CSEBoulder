@@ -1,18 +1,13 @@
 """
 Azure HTTP trigger function module
 """
-import azure.functions as func
-
 from applicationinsights import TelemetryClient
-
+import azure.functions as func
+from azure.storage.blob import BlockBlobService, PublicAccess
 from blob_storage_helper import upload_to_blobstore
 from oauth import AutoUpdatedTokenCredential
-from settings import APPINSIGHTS_INSTRUMENTATION_KEY
-from azure.storage.blob import BlockBlobService, PublicAccess
-
-from settings import AZURE_STORAGE_ACCOUNT_NAME
-from settings import BLOB_CONTAINER_NAME
-
+from settings import APPINSIGHTS_INSTRUMENTATION_KEY,\
+ AZURE_STORAGE_ACCOUNT_NAME, BLOB_CONTAINER_NAME
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     """
@@ -41,7 +36,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     return http_response
 
 
-def run_functriggercode(block_blob_service: BlockBlobService, container_name: str, req: func.HttpRequest, telemetry_client: TelemetryClient) -> func.HttpResponse:
+def run_functriggercode(block_blob_service: BlockBlobService, container_name: str, \
+    req: func.HttpRequest, telemetry_client: TelemetryClient) -> func.HttpResponse:
     """
     The core logic of the function to parse and upload to blob store
     (separated out for testability)
@@ -62,10 +58,11 @@ def run_functriggercode(block_blob_service: BlockBlobService, container_name: st
         return func.HttpResponse(
             "Could not find the file ext as part of the HTTP request body",
             status_code=400
-        ) 
+        )
     # Upload to blob storage
     telemetry_client.track_trace("Calling upload_to_blobstore...")
-    blob_upload_result = upload_to_blobstore(block_blob_service, container_name, encoded_image, file_ext, telemetry_client)
+    blob_upload_result = upload_to_blobstore(block_blob_service, container_name, \
+    encoded_image, file_ext, telemetry_client)
     if blob_upload_result == 200:
         telemetry_client.track_trace("Successfully uploaded to blob store")
         telemetry_client.flush()
@@ -73,10 +70,10 @@ def run_functriggercode(block_blob_service: BlockBlobService, container_name: st
             "Successfully uploaded to blob store",
             status_code=200
         )
-    else:
-        telemetry_client.track_trace("Error occurred while uploading to blob store")
-        telemetry_client.flush()
-        return func.HttpResponse(
-            "Error occurred while uploading to blob store",
-            status_code=500
-        )
+    
+    telemetry_client.track_trace("Error occurred while uploading to blob store")
+    telemetry_client.flush()
+    return func.HttpResponse(
+        "Error occurred while uploading to blob store",
+        status_code=500
+    )
